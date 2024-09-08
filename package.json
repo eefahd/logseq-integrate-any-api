@@ -1,15 +1,18 @@
 {
     "name": "logseq-integrate-any-api",
-    "title": "Integrate Any API",
+    "version": "v0.1.0",
+    "main": "dist/index.html",
+    "logseq": {
+        "id": "logseq-integrate-any-api",
+        "title": "Integrate Any API",
+        "icon": "./icon.png",
+        "repo": "eefahd/logseq-integrate-any-api"
+    },
     "description": "Call APIs with Block Content and Insert Responses.",
     "author": "Fahd Hussein",
-    "repo": "eefahd/logseq-integrate-any-api",
-    "icon": "./icon.png",
     "private": true,
-    "version": "v0.1.0",
     "license": "MIT",
     "type": "module",
-    "main": "dist/index.html",
     "scripts": {
         "dev": "vite",
         "build": "vite build --base=./",
@@ -34,8 +37,5 @@
         "globals": "^15.9.0",
         "tailwindcss": "^3.4.10",
         "vite": "^5.4.1"
-    },
-    "logseq": {
-        "id": "logseq-integrate-any-api"
     }
 }
