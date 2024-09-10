@@ -47,6 +47,7 @@ With the rapid emergence of new services, especially those leveraging LLM models
 - Add more response actions
 - Add keybindings for quicker access
 - Post-process responses to better adapt to Logseq's format
+- Support input from multiple blocks
 
 ## License
 
