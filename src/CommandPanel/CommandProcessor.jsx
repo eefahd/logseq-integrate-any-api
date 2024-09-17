@@ -3,7 +3,7 @@ import { convertBlobToBase64 } from "../api/apiHelpers";
 
 
 export async function processCommand(blockUUID, apiConfig) {
-    const selectedBlock = await logseq.Editor.getBlock(blockUUID);
+    const selectedBlock = await logseq.Editor.getBlock(blockUUID, { includeChildren: true });
     if (!selectedBlock) {
         logseq.UI.showMsg('No block selected!', "error", { timeout: 3000 });
         return
@@ -15,7 +15,7 @@ export async function processCommand(blockUUID, apiConfig) {
         { key: "logseq-integrate-any-api-progress-status", timeout: 20000 }
     );
 
-    let inputContent = selectedBlock.content
+    let inputContent = parseBlockContent(selectedBlock);
     const filePath = await parseFilePath(selectedBlock.content);
     if (filePath) {
         if (apiConfig.inputFileMethod == 'path') {
@@ -61,6 +61,20 @@ export async function processCommand(blockUUID, apiConfig) {
         logseq.UI.closeMsg("logseq-integrate-any-api-progress-status");
     })
 
+}
+
+const parseBlockContent = (block, depth = 0) => {
+    const indent = '  '.repeat(depth);
+    const dash = depth > 0 ? '- ' : '';
+    let parsedContent = `${indent}${dash}${block.content}\n`;
+
+    if (block.children && block.children.length > 0) {
+        block.children.forEach(child => {
+            parsedContent += parseBlockContent(child, depth + 1);
+        });
+    }
+
+    return parsedContent;
 }
 
 async function parseFilePath(blockContent) {
