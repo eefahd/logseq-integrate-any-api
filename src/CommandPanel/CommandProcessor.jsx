@@ -43,13 +43,15 @@ export async function processCommand(blockUUID, apiConfig) {
         apiConfig.contentType
     ).then(response => {
         if (response.value) {
-            const responseContent = response.value;
+            const rawResponseContent = response.value;
+            const processedResponseBlocks = postprocessMarkdownToLogseq(rawResponseContent);
             if (apiConfig.responseAction == 'write_child_below') {
-                logseq.Editor.insertBlock(blockUUID, responseContent, { before: false, sibling: false });
+                logseq.Editor.insertBatchBlock(blockUUID, processedResponseBlocks, { before: false, sibling: false });
             } else if (apiConfig.responseAction == 'write_sibling_below') {
-                logseq.Editor.insertBlock(blockUUID, responseContent, { before: false, sibling: true })
+                logseq.Editor.insertBatchBlock(blockUUID, processedResponseBlocks, { before: false, sibling: true })
             } else if (apiConfig.responseAction == 'replace_content') {
-                logseq.Editor.updateBlock(blockUUID, responseContent)
+                logseq.Editor.insertBatchBlock(blockUUID, processedResponseBlocks, { before: false, sibling: true });
+                logseq.Editor.removeBlock(blockUUID);
             }
         }
     }).then(() => {
@@ -132,3 +134,38 @@ const replacePlaceholderWithInputContent = (obj, placeholderValue) => {
         return value;
     });
 };
+
+const postprocessMarkdownToLogseq = (markdownText) => {
+    // this is an initial function to prepare data for logseq
+    // TODO: improve this function
+    let lines = markdownText.split('\n');
+    let blocks = [];
+    let currentBlock = null;
+    let currentLevelIsRoot = true;
+
+    lines.forEach(line => {
+        line = line.trim();
+
+        if (line.startsWith('#')) {
+            currentBlock = { content: line, children: [] };
+            currentLevelIsRoot = false;
+            blocks.push(currentBlock);
+        } else if (line.startsWith('- ')) {
+            if (currentBlock) {
+                currentBlock.children.push({ content: line });
+            } else {
+                blocks.push({ content: line });
+            }
+        } else if (line.length > 0) {
+            if (currentBlock && !currentLevelIsRoot) {
+                currentBlock.children.push({ content: line });
+            } else {
+                currentBlock = { content: line, children: [] };
+                blocks.push(currentBlock);
+            }
+        }
+    });
+
+
+    return blocks;
+}

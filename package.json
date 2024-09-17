@@ -1,6 +1,6 @@
 {
     "name": "logseq-integrate-any-api",
-    "version": "v0.1.1",
+    "version": "v0.1.2",
     "main": "dist/index.html",
     "logseq": {
         "id": "logseq-integrate-any-api",
