@@ -47,6 +47,10 @@ export const ApiConfigDataForm = ({
         handleOnChangeApiConfig(apiConfig.id, { ...apiConfig, 'responseAction': value });
     }
 
+    const handleOnChangeRequestType = (value) => {
+        handleOnChangeApiConfig(apiConfig.id, { ...apiConfig, 'requestType': value });
+    }
+
     const handleOnClickDuplicateConfig = () => {
         handleDuplicateApiConfig(apiConfig);
     }
@@ -112,6 +116,17 @@ export const ApiConfigDataForm = ({
             </div>
 
             <FormTextInput id="config_name" label="Name" ref={inputRef} value={apiConfig.name} handleOnChange={handleOnChangeConfigName} />
+            <FormSelectionInput
+                id="request_type"
+                label="Request Type"
+                selectionOptions={[
+                    { "id": "none", "label": "Standard" },
+                    { "id": "ollama", "label": "Ollama" },
+                    { "id": "openai", "label": "OpenAI" }
+                ]}
+                value={apiConfig.requestType}
+                handleOnChange={handleOnChangeRequestType}
+            />
             <FormTextInput id="api_endpoint" label="Endpoint" value={apiConfig.endpoint} handleOnChange={handleOnChangeEndpoint} />
             <FormSelectionInput
                 id="request_method"

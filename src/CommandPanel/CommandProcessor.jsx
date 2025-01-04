@@ -43,7 +43,20 @@ export async function processCommand(blockUUID, apiConfig) {
         apiConfig.contentType
     ).then(response => {
         if (response.value) {
-            const rawResponseContent = response.value;
+            let rawResponseContent = response.value;
+
+            if(apiConfig.requestType === 'ollama' && rawResponseContent) {
+                const ollamaResponse = JSON.parse(JSON.stringify(rawResponseContent));
+                if (ollamaResponse.response) {
+                    rawResponseContent = ollamaResponse.response;
+                }
+            } else if (apiConfig.requestType === 'openai' && rawResponseContent) {
+                const openaiResponse = JSON.parse(JSON.stringify(rawResponseContent));
+                if (openaiResponse.choices && openaiResponse.choices.length > 0) {
+                    rawResponseContent = openaiResponse.choices[0].message.content;
+                }
+            }
+
             const processedResponseBlocks = postprocessMarkdownToLogseq(rawResponseContent);
             if (apiConfig.responseAction == 'write_child_below') {
                 logseq.Editor.insertBatchBlock(blockUUID, processedResponseBlocks, { before: false, sibling: false });
