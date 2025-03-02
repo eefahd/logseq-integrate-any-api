@@ -15,6 +15,7 @@ export const FormTextInput = forwardRef((props, ref) => (
                     type="text"
                     className="form-input"
                     ref={ref}
+                    placeholder={!!props.placeholder ? props.placeholder : ''}
                     value={!!props.value ? props.value : ''}
                     onChange={(e) => props.handleOnChange(e.target.value)}
                 />

@@ -16,6 +16,10 @@ export const ApiConfigDataForm = ({
         handleOnChangeApiConfig(apiConfig.id, { ...apiConfig, 'name': value });
     }
 
+    const handleOnChangeRequestType = (value) => {
+        handleOnChangeApiConfig(apiConfig.id, { ...apiConfig, 'requestType': value });
+    }
+
     const handleOnChangeEndpoint = (value) => {
         handleOnChangeApiConfig(apiConfig.id, { ...apiConfig, 'endpoint': value });
     }
@@ -47,8 +51,12 @@ export const ApiConfigDataForm = ({
         handleOnChangeApiConfig(apiConfig.id, { ...apiConfig, 'responseAction': value });
     }
 
-    const handleOnChangeRequestType = (value) => {
-        handleOnChangeApiConfig(apiConfig.id, { ...apiConfig, 'requestType': value });
+    const handleOnChangeResponseWrapperBlockTitle = (value) => {
+        handleOnChangeApiConfig(apiConfig.id, { ...apiConfig, 'responseWrapperBlockTitle': value });
+    }
+
+    const handleOnChangeResponseFormattingMethod = (value) => {
+        handleOnChangeApiConfig(apiConfig.id, { ...apiConfig, 'responseFormattingMethod': value });
     }
 
     const handleOnClickDuplicateConfig = () => {
@@ -179,6 +187,24 @@ export const ApiConfigDataForm = ({
                 ]}
                 value={apiConfig.responseAction}
                 handleOnChange={handleOnChangeResponseAction}
+            />
+            <FormTextInput
+                id="response_wrapper_block_title"
+                label="Response Wrapper Block Title"
+                value={apiConfig.responseWrapperBlockTitle}
+                placeholder="Enter a title (e.g., 'AI Generated'). Leave empty to disable."
+                handleOnChange={handleOnChangeResponseWrapperBlockTitle}
+            />
+            <FormSelectionInput
+                id="response_formatting_method"
+                label="Response Formatting"
+                selectionOptions={[
+                    { "id": "blocks", "label": "Convert Lines into Structured Blocks (Default)" },
+                    { "id": "multiline", "label": "Heading-Based Blocks – Uses headings to define blocks with multiline content" },
+                    { "id": "raw", "label": "Raw Response – No formatting applied, plain output" }
+                ]}
+                value={apiConfig.responseFormattingMethod}
+                handleOnChange={handleOnChangeResponseFormattingMethod}
             />
 
         </div>
